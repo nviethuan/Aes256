@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     ByteArray key, dec;
     size_t file_len;
 
-    FILE *input, *output;
+    FILE *input, *output, *key_input;
 
     srand(time(0));
 
@@ -49,8 +49,19 @@ int main(int argc, char **argv)
     }
 
     size_t key_len = 0;
-    while(argv[1][key_len] != 0)
-        key.push_back(argv[1][key_len++]);
+
+    key_input = fopen(argv[1], "rb");
+    if (key_input == 0) {
+        fprintf(stderr, "Cannot read file '%s'\n", argv[1]);
+        return 1;
+    }
+
+    char c = fgetc(key_input); 
+    while (c != EOF) 
+    { 
+        key.push_back(c);
+        c = fgetc(key_input);
+    }
 
     input = fopen(argv[2], "rb");
     if (input == 0) {
